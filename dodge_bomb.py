@@ -2,6 +2,7 @@ import os
 import random
 import sys
 import pygame as pg
+import time
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -26,6 +27,43 @@ def check_bound(rect: pg.Rect) -> tuple[bool, bool]:
     if rect.top < 0 or HEIGHT < rect.bottom:  #縦方向
         tate = False
     return yoko, tate
+
+
+def gameover(screen: pg.Surface) -> None:
+    """
+    引数：スクリーンサーフェイス
+    戻り値：なし
+    接触時にGameOverを表示する
+    """
+    black_img = pg.Surface((WIDTH, HEIGHT))
+    black_img.fill((0, 0, 0))  # 色指定
+    black_img.set_alpha(180)
+
+    fonto = pg.font.Font(None, 100)
+    txt = fonto.render("Game Over", True, (255, 255, 255))
+    txt_rect = txt.get_rect(center=(WIDTH // 2, HEIGHT // 2))  # 文字の位置
+
+    over_img = pg.image.load("fig/8.png")
+    cry_rect_left = over_img.get_rect(center=(WIDTH // 2 -250, HEIGHT // 2))  #ゲームオーバー時のこうかとんの位置
+    cry_rect_right = over_img.get_rect(center=(WIDTH // 2 +250, HEIGHT // 2))
+
+
+
+    #black_img.blit(txt, [300, 200])
+    black_img.blit(txt, txt_rect)  #指定した位置に張り付ける
+    
+    black_img.blit(over_img, cry_rect_left)
+    black_img.blit(over_img, cry_rect_right)
+
+
+    screen.blit(black_img, [0,0])
+    pg.display.update()
+    time.sleep(5)  # 5秒間表示する
+    
+    
+# get_kk_imgs() -> dict[tuple[int, int], pg.Surface]
+
+
 
 
 def main():
@@ -53,6 +91,7 @@ def main():
 
         if kk_rct.colliderect(bb_rct):  #kkとbbのrectが重なっていたら
             print("game over")
+            gameover(screen)
             return
 
         key_lst = pg.key.get_pressed()

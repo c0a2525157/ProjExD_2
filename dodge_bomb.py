@@ -28,13 +28,18 @@ def check_bound(rect: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
-# def timer(screan: pg.Surface, tmr: int):
-#     jikan = pg.Surface([100, 100])
-#     pg.draw.rect(jikan, 0 ,0 ,0 , jikan.get.rect())
-#     iro = pg.font.Font(None, 80)
-#     text = iro.render(tmr/1000, True, (255, 255, 255))
-#     screan.blit(text, (0, 0))
-#     pg.display.update()
+def timer(screan: pg.Surface, tmr: int) -> None:
+    """
+    引数：スクリーンと時間(tmr)
+    戻り値：なし
+    左上に時間を表示する関数
+    """
+    jikan = pg.Surface([100, 100])
+    pg.draw.rect(jikan ,(0, 0, 0), jikan.get_rect())
+    iro = pg.font.Font(None, 80)
+    text = iro.render(f"{tmr//50}", True, (255, 255, 255))
+    screan.blit(text, (0, 0))
+    pg.display.update()
 
 
 
@@ -71,7 +76,7 @@ def gameover(screen: pg.Surface) -> None:
     
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
     """
-    戻り値：タプルとサーフェイス
+    戻り値：辞書型のこうかとんの画像
     進行方向にこうかとんの向きを変更する
     """
     kk_img = pg.image.load("fig/3.png")
@@ -117,7 +122,7 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     while True:
-        # timer(screen, tmr)
+        timer(screen, tmr)  # 時間表示
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return

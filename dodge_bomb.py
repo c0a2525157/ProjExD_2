@@ -28,6 +28,15 @@ def check_bound(rect: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
+# def timer(screan: pg.Surface, tmr: int):
+#     jikan = pg.Surface([100, 100])
+#     pg.draw.rect(jikan, 0 ,0 ,0 , jikan.get.rect())
+#     iro = pg.font.Font(None, 80)
+#     text = iro.render(tmr/1000, True, (255, 255, 255))
+#     screan.blit(text, (0, 0))
+#     pg.display.update()
+
+
 
 def gameover(screen: pg.Surface) -> None:
     """
@@ -48,7 +57,6 @@ def gameover(screen: pg.Surface) -> None:
     cry_rect_right = over_img.get_rect(center=(WIDTH // 2 +250, HEIGHT // 2))
 
 
-
     # black_img.blit(txt, [300, 200])
     black_img.blit(txt, txt_rect)  #指定した位置に張り付ける
     
@@ -62,19 +70,23 @@ def gameover(screen: pg.Surface) -> None:
     
     
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    """
+    戻り値：タプルとサーフェイス
+    進行方向にこうかとんの向きを変更する
+    """
     kk_img = pg.image.load("fig/3.png")
     kk_rv = pg.transform.flip(kk_img, True, False)
 
     kk_dict = {
-        (-5, -5): pg.transform.rotozoom(kk_img, -45, 0.9),
-        (-5, 0): pg.transform.rotozoom(kk_img, 0, 0.9),
-        (0, 0): pg.transform.rotozoom(kk_img, 0, 0.9),
-        (-5, +5): pg.transform.rotozoom(kk_img, 45, 0.9),
-        (+5, +5): pg.transform.rotozoom(kk_rv, -45, 0.9),
-        (+5, 0): pg.transform.rotozoom(kk_rv, 0, 0.9),
-        (+5, -5): pg.transform.rotozoom(kk_rv, 45, 0.9),
-        (0, -5): pg.transform.rotozoom(kk_rv, 90, 0.9),
-        (0, +5): pg.transform.rotozoom(kk_rv, -90, 0.9),
+        (-5, -5): pg.transform.rotozoom(kk_img, -45, 0.9),  # 左上
+        (-5, 0): pg.transform.rotozoom(kk_img, 0, 0.9),  # 左
+        (0, 0): pg.transform.rotozoom(kk_img, 0, 0.9),  # キー押下がない場合
+        (-5, +5): pg.transform.rotozoom(kk_img, 45, 0.9),  # 左下
+        (+5, +5): pg.transform.rotozoom(kk_rv, -45, 0.9),  # 右下
+        (+5, 0): pg.transform.rotozoom(kk_rv, 0, 0.9),  # 右
+        (+5, -5): pg.transform.rotozoom(kk_rv, 45, 0.9),  # 右上
+        (0, -5): pg.transform.rotozoom(kk_rv, 90, 0.9),  # 上
+        (0, +5): pg.transform.rotozoom(kk_rv, -90, 0.9),  # 下
     } 
     return kk_dict
 
@@ -105,6 +117,7 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     while True:
+        # timer(screen, tmr)
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return

@@ -49,7 +49,7 @@ def gameover(screen: pg.Surface) -> None:
 
 
 
-    #black_img.blit(txt, [300, 200])
+    # black_img.blit(txt, [300, 200])
     black_img.blit(txt, txt_rect)  #指定した位置に張り付ける
     
     black_img.blit(over_img, cry_rect_left)
@@ -61,7 +61,22 @@ def gameover(screen: pg.Surface) -> None:
     time.sleep(5)  # 5秒間表示する
     
     
-# get_kk_imgs() -> dict[tuple[int, int], pg.Surface]
+def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    kk_img = pg.image.load("fig/3.png")
+    kk_rv = pg.transform.flip(kk_img, True, False)
+
+    kk_dict = {
+        (-5, -5): pg.transform.rotozoom(kk_img, -45, 0.9),
+        (-5, 0): pg.transform.rotozoom(kk_img, 0, 0.9),
+        (0, 0): pg.transform.rotozoom(kk_img, 0, 0.9),
+        (-5, +5): pg.transform.rotozoom(kk_img, 45, 0.9),
+        (+5, +5): pg.transform.rotozoom(kk_rv, -45, 0.9),
+        (+5, 0): pg.transform.rotozoom(kk_rv, 0, 0.9),
+        (+5, -5): pg.transform.rotozoom(kk_rv, 45, 0.9),
+        (0, -5): pg.transform.rotozoom(kk_rv, 90, 0.9),
+        (0, +5): pg.transform.rotozoom(kk_rv, -90, 0.9),
+    } 
+    return kk_dict
 
 
 
@@ -70,9 +85,15 @@ def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")    
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
+    # kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
+    # kk_rct = kk_img.get_rect()
+    # kk_rct.center = 300, 200
+    kk_img_new = get_kk_imgs()
+    kk_img = kk_img_new[(0, 0)]
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
+
+
     bb_img = pg.Surface((20, 20))  # 練習2：空のSurface
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)  # 赤い爆弾
     bb_img.set_colorkey((0, 0, 0))  # 練習2：四隅の黒い部分を透過する
@@ -112,6 +133,7 @@ def main():
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):  # どこかしらはみ出ている
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])  # 反転
+        kk_img = kk_img_new[tuple(sum_mv)]
         screen.blit(kk_img, kk_rct)
 
         bb_rct.move_ip(vx, vy)  #練習2：爆弾動く
